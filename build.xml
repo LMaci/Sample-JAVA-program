@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="Zadanie4App">
+    <property environment="env"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="Zadanie4App.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="src/resources/lib/jcalendar.jar"/>
+        <pathelement location="src/resources/lib/l2fprod-common-tasks.jar"/>
+        <pathelement location="src/resources/lib/l2fprod-common-totd.jar"/>
+        <pathelement location="src/resources/lib/log4j-1.2.11.jar"/>
+    </path>
+    <target name="init">
+    	
+    	<echo message = "Inicjacja zmiennych parametrycznych..."/>
+    	<property name = "Zadanie4App.bin" value = "bin" />
+    	<property name = "Zadanie4App.src" value = "src" />
+    	<property name = "Zadanie4App.doc" value = "doc" />
+    	<property name = "Zadanie4App.dist" value = "dist" />
+    	<property name = "Zadanie4App.lib" value = "lib" />
+    	<property name = "p.app" value = "${Zadanie4App.src}/app" />
+    	<path id="build.classpath">
+    	  <fileset dir="lib">
+    		<include name="**/*.jar"/>
+    	  </fileset>
+    	</path>
+    </target>
+	
+	
+ 	<target name = "prepare" depends="clean">
+	<echo message = "Przygotowanie struktury projektu..."/>
+	<mkdir dir="bin"/>
+	        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+	<mkdir dir = "${Zadanie4App.doc}"/>
+	<mkdir dir = "${Zadanie4App.jar}"/>
+	<mkdir dir = "${Zadanie4App.dist}"/>
+    </target>    
+	
+    <target name = "clean" depends="init">
+	<property name = "Zadanie4App.bin" value = "bin" />
+	<property name = "Zadanie4App.doc" value = "doc" />
+	<property name = "Zadanie4App.dist" value = "dist" />
+	<echo message = "Usuwanie zbednych czesci projektu..."/>
+	<delete dir = "${Zadanie4App.bin}"/>
+	<delete dir = "${Zadanie4App.doc}"/>
+	<delete dir = "${Zadanie4App.dist}"/>
+    </target>
+	
+
+              	
+    <target depends="build-jar" name="build"/>
+    <target depends="prepare" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}" encoding="UTF-8">
+            <src path="src"/>
+            <classpath refid="Zadanie4App.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+
+              
+    <target name = "doc" depends = "build-project">
+    	<echo message = "Utworzenie dokumentacji javadoc..." />
+    	<javadoc sourcefiles = "${p.app}/*.java" 
+    		destdir = "${Zadanie4App.doc}" 
+   			encoding="UTF-8"
+  			charset="UTF-8" 
+   			docencoding="UTF-8">
+   			<classpath refid="build.classpath"/>
+   		</javadoc>
+   	</target>
+              	 
+              	
+   	<target name="build-jar" depends = "doc">
+	    <property name = "Zadanie4App.bin" value = "bin" />
+    	<property name = "Zadanie4App.dist" value = "dist" />
+    	<property name = "Zadanie4App.lib" value = "lib" />
+       
+	   <jar destfile="${Zadanie4App.dist}/Zadanie4App.jar"
+    		 basedir="${Zadanie4App.bin}">
+        <fileset dir="${Zadanie4App.bin}" includes="**/*.class" />
+        <zipgroupfileset dir="${Zadanie4App.lib}" includes="**/*.jar" />
+              			  
+        <manifest>
+			<attribute name="Main-Class" value="app.Okno"/>
+			</manifest>
+              			  
+		</jar>
+    </target>
+	
+	<target name="RUN" depends = "build">
+	   <echo message = "Start aplikacji..." />
+		<java classname="app.Okno" fork="true"
+			  classpath = "${Zadanie4App.bin}" >
+		<classpath refid="build.classpath"/>
+		</java>
+	</target>	
+	
+              	
+</project>
